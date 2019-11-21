@@ -47,7 +47,7 @@ grid_on = True # True, False
 # Generic module: var - some xr.DataArray
 ax.coastlines()
 ax.set_extent(map_extent)
-h = ax.contourf(var.lat, var.lon, var, cmap = cmap, levels = levels)
+h = ax.contourf(var.lon, var.lat, var, cmap = cmap, levels = levels)
 plt.colorbar(h, ax = ax, boundaries = levels)
 if grid_on:
     gl = ax.gridlines(crs=ccrs.PlateCarree(), draw_labels=True,
