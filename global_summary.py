@@ -54,8 +54,8 @@ if grid_on:
                       linewidth=1, color='gray', alpha=0.5, linestyle='--')
     gl.xlabels_top = False
     gl.ylabels_right = False
-    gl.xlocator = mticker.FixedLocator(np.arange(-180, 180, 20.))
-    gl.ylocator = mticker.FixedLocator(np.arange(-90., 90., 10.))
+    gl.xlocator = mticker.FixedLocator(np.arange(-180, 181, 20.))
+    gl.ylocator = mticker.FixedLocator(np.arange(-90., 91., 10.))
     gl.xformatter = LONGITUDE_FORMATTER
     gl.yformatter = LATITUDE_FORMATTER
     gl.xlabel_style = {'color': 'black', 'weight': 'bold', 'size': 10}
