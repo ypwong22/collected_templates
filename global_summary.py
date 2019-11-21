@@ -40,7 +40,7 @@ data.close()
 # Options - Change here
 cmap = 'Spectral'
 levels = np.linspace(-1., 1., 10)
-map_extent = [-180, 180, -60, 70]
+map_extent = [-180, 180, -60, 90]
 grid_on = True # True, False
 
 
@@ -48,7 +48,7 @@ grid_on = True # True, False
 ax.coastlines()
 ax.set_extent(map_extent)
 h = ax.contourf(var.lon, var.lat, var, cmap = cmap, levels = levels)
-plt.colorbar(h, ax = ax, boundaries = levels)
+plt.colorbar(h, ax = ax, boundaries = levels, shrink = 0.7)
 if grid_on:
     gl = ax.gridlines(crs=ccrs.PlateCarree(), draw_labels=True,
                       linewidth=1, color='gray', alpha=0.5, linestyle='--')
