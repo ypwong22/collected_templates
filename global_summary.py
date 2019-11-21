@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 fname = 'myfile.nc'
 data = xr.open_dataset(fname, decode_times = True)
 time = data['time'].indexes['time']
-var_ts = data['var'].mean(dims = ['lat', 'lon'])
+var_ts = data['var'].mean(dim = ['lat', 'lon'])
 data.close()
 
 fig, ax = plt.subplots(figsize = (10, 10))
@@ -30,7 +30,7 @@ from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 # Calculate the climatology.
 fname = 'myfile.nc'
 data = xr.open_dataset(fname, decode_times = True)
-var = data['var'].mean(dims = ['time'])
+var = data['var'].mean(dim = ['time'])
 data.close()
 
 
