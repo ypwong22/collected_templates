@@ -48,7 +48,7 @@ grid_on = True # True, False
 ax.coastlines()
 ax.set_extent(map_extent)
 h = ax.contourf(var.lon, var.lat, var, cmap = cmap, levels = levels)
-plt.colorbar(h, ax = ax, boundaries = levels, shrink = 0.7)
+plt.colorbar(h, ax = ax, boundaries = levels, ticks = 0.5 * (levels[1:] + levels[:-1]), shrink = 0.7)
 if grid_on:
     gl = ax.gridlines(crs=ccrs.PlateCarree(), draw_labels=True,
                       linewidth=1, color='gray', alpha=0.5, linestyle='--')
