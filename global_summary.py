@@ -25,6 +25,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 import cartopy.crs as ccrs
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
+import xarray as xr
 
 
 # Calculate the climatology.
