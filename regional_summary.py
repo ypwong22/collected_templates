@@ -2,9 +2,9 @@
 # Subset a global region using a boolean mask.
 ###############################################################################
 import xarray as xr
+import numpy as np
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
-
 
 # Get mask: True - retain values, False - discard values.
 # ! Mask must have same lat & lon dimensions and order as the dataset.
@@ -20,6 +20,12 @@ var = xr.DataArray(np.where(mask, data['var'].values.copy(), np.nan),
                              'lon': data['lon'].values},
                    dims = ['time', 'lat', 'lon'])
 data.close()
+
+# Cut down the dataset to only a bounding box of the mask.
+mask_lat = data.lat.values[np.isfinite(mask).any(axis = 1)]
+mask_lon = data.lon.values[np.isfinite(mask).any(axis = 0)]
+var = var.sel(lat = slice(np.min(mask_lat), np.max(mask_lat)),
+              lon = slice(np.min(mask_lon), np.max(mask_lon))
 
 # Save to netcdf.
 var.to_dataset(name = 'var').to_netcdf('mydata_subset.nc')
