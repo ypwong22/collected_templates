@@ -25,17 +25,18 @@ data.close()
 mask_lat = data.lat.values[np.isfinite(mask).any(axis = 1)]
 mask_lon = data.lon.values[np.isfinite(mask).any(axis = 0)]
 var = var.sel(lat = slice(np.min(mask_lat), np.max(mask_lat)),
-              lon = slice(np.min(mask_lon), np.max(mask_lon))
+              lon = slice(np.min(mask_lon), np.max(mask_lon)))
 
 # Save to netcdf.
 var.to_dataset(name = 'var').to_netcdf('mydata_subset.nc')
 
 # Accompanying plot.
 fig, ax = plt.subplots(subplot_kw = {'projection': ccrs.PlateCarree()})
+ax.coastlines()
 h = ax.contourf(var.lon, var.lat, var.mean(dim = 'time'))
 fig.colorbar(h, ax = ax, cmap = 'Spectral', shrink = 0.7)
 fig.savefig('mydata_subset.png')
-
+plt.close(fig)
 
 ###############################################################################
 # Calculate and plot latitudinal mean time series.
