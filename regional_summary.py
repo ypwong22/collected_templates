@@ -162,7 +162,8 @@ for mk_ind, mk in enumerate(mask_levels):
     area_temp = np.where(np.abs(mask - mk) < eps, area, np.nan)
 
     # Keep the time dimension
-    var_bymask[:, mk_ind] = np.nanmean(var_temp * area_temp) / np.nanmean(area_temp)
+    var_bymask[:, mk_ind] = np.nanmean(np.nanmean(var_temp * area_temp, 
+                                                  axis = 2), axis = 1) / np.nanmean(area_temp)
 
 data.close()
 
