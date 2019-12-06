@@ -22,7 +22,7 @@ var = xr.DataArray(np.where(mask, data['var'].values.copy(), np.nan),
 data.close()
 
 # Cut down the dataset to only a bounding box of the mask.
-eps = 0.01
+eps = 0.01 # floating point tolerance
 
 mask_lat = data.lat.values[np.isfinite(mask).any(axis = 1)]
 mask_lon = data.lon.values[np.isfinite(mask).any(axis = 0)]
@@ -84,6 +84,7 @@ data = xr.open_dataset('myfile.nc')
 lat_bnd_wgts = np.cos(np.deg2rad(data.lat.values))
 
 for i in range(len(lon_bnd)-1):
+    # like pandas, label based indexing in xarray is inclusive of both the start and the stop bounds
     var_temp = data['var'].sel(lon = slice(lon_bnd[i] - eps, lat_bnd[i+1] - eps)).values
     
     # normalize the weights according to the number of grid cells that have valid values.
