@@ -120,7 +120,7 @@ for i in range(len(lon_bnd)-1):
 data.close()
 
 fig, ax = plt.subplots(figsize = (4, 4))
-ax.plot(0.5 * (lon_bnd[:-1] + lon_bnd[1:]), var_bylon, '-', color = 'k')
+ax.plot(lon_bnd_median, var_bylon.mean(axis = 0), '-', color = 'k')
 ax.set_xlabel('Lon')
 ax.set_ylabel('Var [Unit]')
 fig.savefig('myfig.png', dpi = 600., bbox_inches = 'tight')
@@ -131,5 +131,43 @@ plt.close(fig)
 # Calculate and plot mean time series of individual regions defined by levels 
 # in a discrete mask.
 ###############################################################################
+import xarray as xr
+import numpy as np
+import matplotlib.pyplot as plt
+import cartopy.crs as ccrs
 
+# Get mask: True - retain values, False - discard values.
+# ! Mask must have same lat & lon dimensions and order as the dataset.
+data0 = xr.open_dataset('mask.nc')
+mask = data0['mask'].values.copy()
+data0.close()
 
+# Get land area for weighting purpose.
+data1 = xr.open_dataset('land_area.nc')
+area = data1['area'].values.copy()
+data1.close()
+
+# Get the discrete values of the mask.
+mask_levels = np.unique(~np.isnan(mask))
+
+# Get data and apply mask.
+data = xr.open_dataset('mydata.nc')
+eps = 1e-6 # floating point number tolerance
+var = data['var'].values.copy()
+
+var_bymask = np.full([len(data['time']), len(mask_levels)], np.nan)
+
+for mk_ind, mk in enumerate(mask_levels):
+    var_temp = np.where(np.abs(mask - mk) < eps, var, np.nan)
+    area_temp = np.where(np.abs(mask - mk) < eps, area, np.nan)
+
+    # Keep the time dimension
+    var_bymask[:, mk_ind] = np.nanmean(var_temp * area_temp) / np.nanmean(area_temp)
+
+data.close()
+
+# Accompanying plot.
+fig, ax = plt.subplots()
+ax.plot(data['time'].values, var_bymask, var.mean(dim = 'time'))
+fig.savefig('myfig.png')
+plt.close(fig)
