@@ -55,6 +55,7 @@ var_bylat = np.full(len(lat_bnd_median), np.nan)
 
 data = xr.open_dataset('myfile.nc')
 for i in range(len(lat_bnd_median)):
+    # like pandas, label based indexing in xarray is inclusive of both the start and the stop bounds
     var_bylat[i] = np.nanmean(data['var'].sel(lat = slice(lat_bnd[i] - eps, lat_bnd[i+1] - eps)))
 data.close()
 
@@ -85,7 +86,7 @@ lat_bnd_wgts = np.cos(np.deg2rad(data.lat.values))
 
 for i in range(len(lon_bnd)-1):
     # like pandas, label based indexing in xarray is inclusive of both the start and the stop bounds
-    var_temp = data['var'].sel(lon = slice(lon_bnd[i] - eps, lat_bnd[i+1] - eps)).values
+    var_temp = data['var'].sel(lon = slice(lon_bnd[i] - eps, lon_bnd[i+1] - eps)).values
     
     # normalize the weights according to the number of grid cells that have valid values.
     wgts_temp = lat_bnd_wgts
