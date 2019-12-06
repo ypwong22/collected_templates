@@ -48,6 +48,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 lat_bnd = np.arange(0., 60.1, 0.5)
+lat_bnd_median = 0.5 * (lat_bnd[:-1] + lat_bnd[1:])
 eps = 0.01 # Tolerance for floating point latitude comparison.
 
 var_bylat = np.full(len(lat_bnd)-1, np.nan)
@@ -58,7 +59,7 @@ for i in range(len(lat_bnd)-1):
 data.close()
 
 fig, ax = plt.subplots(figsize = (4, 4))
-ax.plot(0.5 * (lat_bnd[:-1] + lat_bnd[1:]), var_bylat, '-', color = 'k')
+ax.plot(lat_bnd_median, var_bylat, '-', color = 'k')
 ax.set_xlabel('Lat')
 ax.set_ylabel('Var [Unit]')
 fig.savefig('myfig.png', dpi = 600., bbox_inches = 'tight')
