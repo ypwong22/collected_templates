@@ -51,10 +51,10 @@ lat_bnd = np.arange(0., 60.1, 0.5)
 lat_bnd_median = 0.5 * (lat_bnd[:-1] + lat_bnd[1:])
 eps = 0.01 # Tolerance for floating point latitude comparison.
 
-var_bylat = np.full(len(lat_bnd)-1, np.nan)
+var_bylat = np.full(len(lat_bnd_median), np.nan)
 
 data = xr.open_dataset('myfile.nc')
-for i in range(len(lat_bnd)-1):
+for i in range(len(lat_bnd_median)):
     var_bylat[i] = np.nanmean(data['var'].sel(lat = slice(lat_bnd[i] - eps, lat_bnd[i+1] - eps)))
 data.close()
 
