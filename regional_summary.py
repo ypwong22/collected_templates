@@ -148,7 +148,7 @@ area = data1['area'].values.copy()
 data1.close()
 
 # Get the discrete values of the mask.
-mask_levels = np.unique(~np.isnan(mask))
+mask_levels = np.unique(mask[~np.isnan(mask)])
 
 # Get data and apply mask.
 data = xr.open_dataset('mydata.nc')
