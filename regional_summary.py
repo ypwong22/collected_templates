@@ -62,7 +62,7 @@ lat_bnd_wgts = np.cos(np.deg2rad(data.lat.values))
 for i in range(len(lat_bnd_median)):
     # like pandas, label based indexing in xarray is inclusive of both the start and the stop bounds    
     var_temp = data['var'].sel(lat = slice(lat_bnd[i] - eps, 
-                                           lat_bnd[i+1] - eps)).mean(dim = 'lon').values
+                                           lat_bnd[i+1] - eps)).mean(dim = 'lon').values.reshape(-1)
 
     # if multiple latitudes exist, use the appropriate weight to average over:
     # (assume time is the first dimension, latitude is the second dimension)
