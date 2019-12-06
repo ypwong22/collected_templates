@@ -65,6 +65,44 @@ fig.savefig('myfig.png', dpi = 600., bbox_inches = 'tight')
 plt.close(fig)
 
 ###############################################################################
+# Calculate and plot longitudinal mean time series. Should provide the weight
+# from grid sizes.
+###############################################################################
+import xarray as xr
+import matplotlib.pyplot as plt
+import numpy as np
+
+lon_bnd = np.arange(-180., 180., 10.)
+eps = 0.01 # Tolerance for floating point latitude comparison.
+
+var_bylon = np.full(len(lon_bnd)-1, np.nan)
+
+data = xr.open_dataset('myfile.nc')
+
+# use cosine of latitude as surrogate for grid cell size, or read from a file.
+lat_bnd_wgts = np.cos(np.deg2rad(data.lat.values))
+
+for i in range(len(lon_bnd)-1):
+    var_temp = data['var'].sel(lon = slice(lon_bnd[i] - eps, lat_bnd[i+1] - eps)).values
+    
+    # normalize the weights according to the number of grid cells that have valid values.
+    wgts_temp = lat_bnd_wgts
+    wgts_temp[np.isnan(var_temp)] = np.nan
+    wgts_temp = wgts_temp / np.nanmean(wgts_temp)
+
+    var_bylon[i] = np.nanmean(var_temp * wgts_temp)
+
+data.close()
+
+fig, ax = plt.subplots(figsize = (4, 4))
+ax.plot(0.5 * (lon_bnd[:-1] + lon_bnd[1:]), var_bylon, '-', color = 'k')
+ax.set_xlabel('Lon')
+ax.set_ylabel('Var [Unit]')
+fig.savefig('myfig.png', dpi = 600., bbox_inches = 'tight')
+plt.close(fig)
+
+
+###############################################################################
 # Calculate and plot mean time series of individual regions defined by levels 
 # in a discrete mask.
 ###############################################################################
