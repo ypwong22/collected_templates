@@ -34,7 +34,7 @@ var.to_dataset(name = 'var').to_netcdf('mydata_subset.nc')
 fig, ax = plt.subplots(subplot_kw = {'projection': ccrs.PlateCarree()})
 ax.coastlines()
 h = ax.contourf(var.lon, var.lat, var.mean(dim = 'time'))
-fig.colorbar(h, ax = ax, cmap = 'Spectral', shrink = 0.7)
+fig.colorbar(h, ax = ax, shrink = 0.7)
 fig.savefig('mydata_subset.png')
 plt.close(fig)
 
