@@ -168,6 +168,6 @@ data.close()
 
 # Accompanying plot.
 fig, ax = plt.subplots()
-ax.plot(data['time'].values, var_bymask, var.mean(dim = 'time'))
+ax.plot(data['time'].values, var_bymask)
 fig.savefig('myfig.png')
 plt.close(fig)
