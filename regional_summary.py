@@ -40,6 +40,7 @@ fig.colorbar(h, ax = ax, shrink = 0.7)
 fig.savefig('mydata_subset.png')
 plt.close(fig)
 
+
 ###############################################################################
 # Calculate and plot latitudinal mean time series.
 ###############################################################################
@@ -55,18 +56,35 @@ data = xr.open_dataset('myfile.nc')
 
 var_bylat = np.full([len(data['time']), len(lat_bnd_median)], np.nan)
 
+# use cosine of latitude as surrogate for grid cell size, or read from a file.
+lat_bnd_wgts = np.cos(np.deg2rad(data.lat.values))
+
 for i in range(len(lat_bnd_median)):
-    # like pandas, label based indexing in xarray is inclusive of both the start and the stop bounds
-    var_bylat[:, i] = data['var'].sel(lat = slice(lat_bnd[i] - eps, 
-                                                  lat_bnd[i+1] - eps)).mean(dim = 'lon').values
+    # like pandas, label based indexing in xarray is inclusive of both the start and the stop bounds    
+    var_temp = data['var'].sel(lat = slice(lat_bnd[i] - eps, 
+                                           lat_bnd[i+1] - eps)).mean(dim = 'lon').values
+
+    # if multiple latitudes exist, use the appropriate weight to average over:
+    # (assume time is the first dimension, latitude is the second dimension)
+    if (len(var_temp.shape) > 1) and (var_temp.shape[1] > 1):
+        wgts_temp = lat_bnd_wgts[(data.lat.values >= lat_bnd[i]) & \
+                                 (data.lat.values < lat_bnd[i+1])].copy()
+        wgts_temp[np.isnan(var_temp[0, :])] = np.nan
+        wgts_temp = wgts_temp / np.nanmean(wgts_temp)
+
+        var_bylat[:, i] = np.nanmean(var_temp * wgts_temp, axis = 1)
+    else:
+       var_bylat[:, i] = varp_temp.reshape(-1)
+
 data.close()
 
 fig, ax = plt.subplots(figsize = (4, 4))
-ax.plot(lat_bnd_median, var_bylat, '-', color = 'k')
+ax.plot(lat_bnd_median, var_bylat.mean(axis = 0), '-', color = 'k')
 ax.set_xlabel('Lat')
 ax.set_ylabel('Var [Unit]')
-fig.savefig('myfig.png', dpi = 600., bbo  x_inches = 'tight')
+fig.savefig('myfig.png', dpi = 600., bbox_inches = 'tight')
 plt.close(fig)
+
 
 ###############################################################################
 # Calculate and plot longitudinal mean time series. Should provide the weight
@@ -77,25 +95,27 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 lon_bnd = np.arange(-180., 180., 10.)
+lon_bnd_median = 0.5 * (lon_bnd[:-1] + lon_bnd[1:])
 eps = 0.01 # Tolerance for floating point latitude comparison.
 
-var_bylon = np.full(len(lon_bnd)-1, np.nan)
-
 data = xr.open_dataset('myfile.nc')
+
+var_bylon = np.full([len(data['time']), len(lon_bnd_median)], np.nan)
 
 # use cosine of latitude as surrogate for grid cell size, or read from a file.
 lat_bnd_wgts = np.cos(np.deg2rad(data.lat.values))
 
 for i in range(len(lon_bnd)-1):
     # like pandas, label based indexing in xarray is inclusive of both the start and the stop bounds
-    var_temp = data['var'].sel(lon = slice(lon_bnd[i] - eps, lon_bnd[i+1] - eps)).values
-    
+    var_temp = data['var'].sel(lon = slice(lon_bnd[i] - eps, 
+                                           lon_bnd[i+1] - eps)).mean(dim = 'lon').values
+
     # normalize the weights according to the number of grid cells that have valid values.
-    wgts_temp = lat_bnd_wgts
-    wgts_temp[np.isnan(var_temp)] = np.nan
+    wgts_temp = lat_bnd_wgts.copy()
+    wgts_temp[np.isnan(var_temp[0, :])] = np.nan # assume time is the first dimension
     wgts_temp = wgts_temp / np.nanmean(wgts_temp)
 
-    var_bylon[i] = np.nanmean(var_temp * wgts_temp)
+    var_bylon[:, i] = np.nanmean(var_temp * wgts_temp, axis = 1) # lat is the second dimension
 
 data.close()
 
