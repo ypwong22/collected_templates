@@ -78,6 +78,7 @@ var = data['var'].resample(indexer = {'time': '1Y'}, label = 'right').apply(func
 
 data.close()
 
+
 ###############################################################################
 # Parallel computation of the trend map at each grid.
 ###############################################################################
