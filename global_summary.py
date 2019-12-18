@@ -65,6 +65,20 @@ if grid_on:
 
 
 ###############################################################################
+# Calculate the annual maximum, minimum, and mean for each year and grid point.
+###############################################################################
+import xarray as xr
+import numpy as np
+
+fname = 'myfile.nc'
+data = xr.open_dataset(fname, decode_times = True)
+
+func = np.mean # np.min, np.max, ...
+var = data['var'].resample(indexer = {'time': '1Y'}, label = 'right').apply(func)
+
+data.close()
+
+###############################################################################
 # Parallel computation of the trend map at each grid.
 ###############################################################################
 import xarray as xr
