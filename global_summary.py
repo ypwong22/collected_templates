@@ -62,3 +62,12 @@ if grid_on:
     gl.yformatter = LATITUDE_FORMATTER
     gl.xlabel_style = {'color': 'black', 'weight': 'bold', 'size': 10}
     gl.ylabel_style = {'color': 'black', 'weight': 'bold', 'size': 10}
+
+
+###############################################################################
+# Parallel computation of the trend map at each grid.
+###############################################################################
+import xarray as xr
+import numpy as np
+import multiprocessing as mp
+
