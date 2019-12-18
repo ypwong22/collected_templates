@@ -73,8 +73,19 @@ import numpy as np
 fname = 'myfile.nc'
 data = xr.open_dataset(fname, decode_times = True)
 
-func = np.mean # np.min, np.max, ...
-var = data['var'].resample(indexer = {'time': '1Y'}, label = 'right').apply(func)
+def time_mean(array_like):
+    """ assume left most dimension is time """
+    return np.mean(array_like, axis = 0)
+def time_max(array_like):
+    """ assume left most dimension is time """
+    return np.max(array_like, axis = 0)
+def time_min(array_like):
+    """ assume left most dimension is time """
+    return np.min(array_like, axis = 0)
+
+var_mean = data['var'].resample(indexer = {'time': '1Y'}).apply(time_mean)
+var_max = data['var'].resample(indexer = {'time': '1Y'}).apply(time_max)
+var_min = data['var'].resample(indexer = {'time': '1Y'}).apply(time_min)
 
 data.close()
 
