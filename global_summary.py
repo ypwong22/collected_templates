@@ -88,12 +88,3 @@ var_max = data['var'].resample(indexer = {'time': '1Y'}).apply(time_max)
 var_min = data['var'].resample(indexer = {'time': '1Y'}).apply(time_min)
 
 data.close()
-
-
-###############################################################################
-# Parallel computation of the trend map at each grid.
-###############################################################################
-import xarray as xr
-import numpy as np
-import multiprocessing as mp
-
