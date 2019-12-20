@@ -16,9 +16,9 @@ var = np.reshape(var, [var.shape[0], var.shape[1] * var_shape[2]])
 retain = np.where(~np.isnan(var[0, :]))[0]
 var = np.array_split(var[:, retain], len(retain), axis = 1)
 
-def calc_trend(array, rank):
-  array = array.reshape(-1)
-  mod = stats.OLS(array, stats.add_constant(range(len(array))))
+def calc_trend(vector, rank):
+  vector = vector.reshape(-1)
+  mod = stats.OLS(vector, stats.add_constant(range(len(vector))))
   reg = mod.fit()
   intercept, slope = reg.params
   p_slope = reg.pvalues[1]
