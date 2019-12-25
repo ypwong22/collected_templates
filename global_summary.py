@@ -24,7 +24,7 @@ plt.close(fig)
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 import cartopy.crs as ccrs
-from cartopy.utils import add_cyclic_point
+from cartopy.util import add_cyclic_point
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 import xarray as xr
 import numpy as np
