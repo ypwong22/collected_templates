@@ -24,6 +24,7 @@ plt.close(fig)
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 import cartopy.crs as ccrs
+from cartopy.utils import add_cyclic_point
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 import xarray as xr
 import numpy as np
@@ -49,7 +50,8 @@ grid_on = True # True, False
 # Generic module: var - some xr.DataArray
 ax.coastlines()
 ax.set_extent(map_extent)
-h = ax.contourf(var.lon, var.lat, var, cmap = cmap, levels = levels)
+var_cyc, lon_cyc = add_cyclic_point(var, coord=var.lon)
+h = ax.contourf(lon_cyc, var.lat, var_cyc, cmap = cmap, levels = levels)
 plt.colorbar(h, ax = ax, boundaries = levels, ticks = 0.5 * (levels[1:] + levels[:-1]), shrink = 0.7)
 if grid_on:
     gl = ax.gridlines(crs=ccrs.PlateCarree(), draw_labels=True,
