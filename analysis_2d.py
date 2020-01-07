@@ -94,4 +94,4 @@ def seasonal_avg2(pd_frame):
         result[season] = temp2.loc[temp2.index.quarter == qtr]
         result[season].index = result[season].index.year
         
-    return pd.DataFrame(result)
+    return result
