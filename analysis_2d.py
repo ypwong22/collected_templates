@@ -45,6 +45,9 @@ import pandas as pd
 import numpy as np
 
 def seasonal_avg(pd_series):
+    """
+    Calculate the seasonal average of a pandas data series.
+    """
     result = {}
     result['annual'] = pd_series.groupby(pd_series.index.year).mean()
 
