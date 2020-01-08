@@ -38,3 +38,32 @@ trend = xr.DataArray(trend.reshape(len(data.lat.values),
                      coords = {'lat': data.lat.values, 
                                'lon': data.lon.values},
                      dims = ['lat', 'lon'])
+
+
+###############################################################################
+# Calculate the annual + seasonal average of a xarray DataArray. Assuming the
+# time series starts from Jan and ends in Dec. Return DataFrame.
+###############################################################################
+def seasonal_avg(data_array):
+    """
+    Calculate the seasonal average of xarray DataArray ('time', 'lat', 'lon')
+    """
+    temp = data_array['time'].to_index()
+    period = temp.to_period(freq = 'Q-NOV')
+
+    result = {}
+    result['annual'] = data_array.groupby(time.year).mean()
+
+    temp2 = data_array.groupby(period).mean()
+
+    # Assuming the time series starts from Jan and ends in Dec: 
+    # set the seasonal average of 2 months to NaN, and remove the
+    # last season (only contains a December)
+    temp2.iloc[0] = np.nan
+    temp2 = temp2[:-1, :, :]
+
+    for qtr, season in enumerate(['DJF', 'MAM', 'JJA', 'SON'], 1):
+        result[season] = temp2.loc[temp2.index.quarter == qtr]
+        result[season]['time'] = result[season]['time'].to_index().year
+
+    return result
