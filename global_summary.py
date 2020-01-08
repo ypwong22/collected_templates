@@ -64,7 +64,12 @@ if grid_on:
     gl.yformatter = LATITUDE_FORMATTER
     gl.xlabel_style = {'color': 'black', 'weight': 'bold', 'size': 10}
     gl.ylabel_style = {'color': 'black', 'weight': 'bold', 'size': 10}
-
+ax.text(-0.07, 0.55, 'latitude', va='bottom', ha='center',
+        rotation='vertical', rotation_mode='anchor',
+        transform=ax.transAxes)
+ax.text(0.5, -0.2, 'longitude', va='bottom', ha='center',
+        rotation='horizontal', rotation_mode='anchor',
+        transform=ax.transAxes)
 
 ###############################################################################
 # Calculate the annual maximum, minimum, and mean for each year and grid point.
