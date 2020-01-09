@@ -48,22 +48,19 @@ def seasonal_avg(data_array):
     """
     Calculate the seasonal average of xarray DataArray ('time', 'lat', 'lon')
     """
-    temp = data_array['time'].to_index()
-    period = temp.to_period(freq = 'Q-NOV')
-
     result = {}
-    result['annual'] = data_array.groupby(time.year).mean()
+    result['annual'] = data_array.groupby('time.year').mean(dim = 'time')
 
-    temp2 = data_array.groupby(period).mean()
-
-    # Assuming the time series starts from Jan and ends in Dec: 
-    # set the seasonal average of 2 months to NaN, and remove the
-    # last season (only contains a December)
-    temp2.iloc[0] = np.nan
-    temp2 = temp2[:-1, :, :]
-
+    period = temp.to_period(freq = 'Q-NOV')
     for qtr, season in enumerate(['DJF', 'MAM', 'JJA', 'SON'], 1):
-        result[season] = temp2.loc[temp2.index.quarter == qtr]
-        result[season]['time'] = result[season]['time'].to_index().year
-
+        data_temp = data_array[period.quarter == qtr, :, :]
+        data_temp['time'] = period[period.quarter == qtr].year
+        data_temp = data_temp.groupby('time').mean(dim='time')
+        if qtr == 1:
+            # Assuming the time series starts from Jan and ends in Dec: 
+            # set the seasonal average of 2 months to NaN, and remove the
+            # last season (only contains a December).
+            data_temp.iloc[0, :, :] = np.nan
+            data_temp = data_temp[:-1, :, :]
+        result[season] = data_temp
     return result
