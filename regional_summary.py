@@ -184,12 +184,14 @@ import cartopy.crs as ccrs
 from cartopy.util import add_cyclic_point
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 from matplotlib import cm
-
+import numpy as np
 
 cmap = cm.get_cmap('Spectral')
 map_extent = [-180, 180, -60, 90]
 grid_on = True # True, False
-
+colorbar = True # True, False
+cm_label = True # True, False; label the level at center of mass
+eps = 1e-6
 
 # Get mask: True - retain values, False - discard values.
 data0 = xr.open_dataset('mask.nc')
@@ -198,7 +200,7 @@ data0.close()
 
 mask_levels = np.sort(np.unique(mask[~np.isnan(mask)]))
 mask_levels_bounds = np.append(mask_levels - (mask_levels[1]-mask_levels[0])/2,
-                               [mask_levels[-1] + (mask_levels[-1]-mask_levels[-2])/2])])
+                               [mask_levels[-1] + (mask_levels[-1]-mask_levels[-2])/2])
 
 ... # create figure and ax
 
@@ -207,8 +209,18 @@ ax.coastlines()
 ax.set_extent(map_extent)
 mask_cyc, lon_cyc = add_cyclic_point(mask, coord=data0.lon)
 cf = ax.contourf(lon_cyc, data0.lat, mask_cyc, cmap = cmap, levels = mask_levels_bounds)
-cb = plt.colorbar(cf, ax = ax, boundaries = mask_levels_bounds, shrink = 0.7)
-cb.ax.set_yticks(mask_levels)
+
+if colorbar:
+    cb = plt.colorbar(cf, ax = ax, boundaries = mask_levels_bounds, shrink = 0.7)
+    cb.ax.set_yticks(mask_levels)
+
+if cm_label:
+    lon2d, lat2d = np.meshgrid(data0.lon.values, data0.lat.values)
+    for mk_ind, mk in mask_levels:
+        mask_subset = (np.abs(mask - mk) < eps).astype(int)
+        x = np.average(lon2d, weights = mask_subset)
+        y = np.average(lat2d, weights = mask_subset)
+        ax.text(x, y, '%d' % mk, fontdict = {'fontsize': 12})
 
 if grid_on:
     gl = ax.gridlines(crs=ccrs.PlateCarree(), draw_labels=True,
