@@ -192,6 +192,7 @@ grid_on = True # True, False
 colorbar = True # True, False
 cm_label = True # True, False; label the level at center of mass
 eps = 1e-6
+alpha = 0.5 # Faintness of the contour color
 
 # Get mask: True - retain values, False - discard values.
 data0 = xr.open_dataset('mask.nc')
@@ -215,7 +216,8 @@ ax.coastlines()
 ax.set_extent(map_extent)
 mask_cyc, lon_cyc = add_cyclic_point(mask, coord=data0.lon)
 cf = ax.contourf(lon_cyc, data0.lat, mask_cyc, cmap = cmap,
-                 levels = mask_levels_bounds)
+                 levels = mask_levels_bounds, alpha = alpha,
+                 antialiased = True)
 
 if colorbar:
     cb = plt.colorbar(cf, ax = ax, boundaries = mask_levels_bounds, 
