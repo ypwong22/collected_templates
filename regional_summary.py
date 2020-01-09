@@ -199,8 +199,14 @@ mask = data0['mask'].values.copy()
 data0.close()
 
 mask_levels = np.sort(np.unique(mask[~np.isnan(mask)]))
-mask_levels_bounds = np.append(mask_levels - (mask_levels[1]-mask_levels[0])/2,
-                               [mask_levels[-1] + (mask_levels[-1]-mask_levels[-2])/2])
+if len(mask_levels) == 1:
+    mask_levels_bounds = np.array([mask_levels[0]-0.5, mask_levels[0],
+                                   mask_levels[0]+0.5])
+else:
+    mask_levels_bounds = np.append(mask_levels - \
+                                   (mask_levels[1]-mask_levels[0])/2,
+                                   [mask_levels[-1] + \
+                                    (mask_levels[-1]-mask_levels[-2])/2])
 
 ... # create figure and ax
 
@@ -208,11 +214,13 @@ mask_levels_bounds = np.append(mask_levels - (mask_levels[1]-mask_levels[0])/2,
 ax.coastlines()
 ax.set_extent(map_extent)
 mask_cyc, lon_cyc = add_cyclic_point(mask, coord=data0.lon)
-cf = ax.contourf(lon_cyc, data0.lat, mask_cyc, cmap = cmap, levels = mask_levels_bounds)
+cf = ax.contourf(lon_cyc, data0.lat, mask_cyc, cmap = cmap,
+                 levels = mask_levels_bounds)
 
 if colorbar:
-    cb = plt.colorbar(cf, ax = ax, boundaries = mask_levels_bounds, shrink = 0.7)
-    cb.ax.set_yticks(mask_levels)
+    cb = plt.colorbar(cf, ax = ax, boundaries = mask_levels_bounds, 
+                      shrink = 0.7)
+    cb.set_ticks(mask_levels)
 
 if cm_label:
     lon2d, lat2d = np.meshgrid(data0.lon.values, data0.lat.values)
