@@ -216,7 +216,7 @@ if colorbar:
 
 if cm_label:
     lon2d, lat2d = np.meshgrid(data0.lon.values, data0.lat.values)
-    for mk_ind, mk in mask_levels:
+    for mk_ind, mk in enumerate(mask_levels):
         mask_subset = (np.abs(mask - mk) < eps).astype(int)
         x = np.average(lon2d, weights = mask_subset)
         y = np.average(lat2d, weights = mask_subset)
