@@ -172,3 +172,58 @@ fig, ax = plt.subplots()
 ax.plot(data['time'].values, var_bymask)
 fig.savefig('myfig.png')
 plt.close(fig)
+
+
+###############################################################################
+# Plot regional masks by different colors.
+###############################################################################
+import xarray as xr
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
+import cartopy.crs as ccrs
+from cartopy.util import add_cyclic_point
+from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
+from matplotlib import cm
+
+
+cmap = cm.get_cmap('Spectral')
+map_extent = [-180, 180, -60, 90]
+grid_on = True # True, False
+
+
+# Get mask: True - retain values, False - discard values.
+data0 = xr.open_dataset('mask.nc')
+mask = data0['mask'].values.copy()
+data0.close()
+
+mask_levels = np.sort(np.unique(mask[~np.isnan(mask)]))
+mask_levels_bounds = np.append(mask_levels - (mask_levels[1]-mask_levels[0])/2,
+                               [mask_levels[-1] + (mask_levels[-1]-mask_levels[-2])/2])])
+
+... # create figure and ax
+
+# Plot.
+ax.coastlines()
+ax.set_extent(map_extent)
+mask_cyc, lon_cyc = add_cyclic_point(mask, coord=data0.lon)
+cf = ax.contourf(lon_cyc, data0.lat, mask_cyc, cmap = cmap, levels = mask_levels_bounds)
+cb = plt.colorbar(cf, ax = ax, boundaries = mask_levels_bounds, shrink = 0.7)
+cb.ax.set_yticks(mask_levels)
+
+if grid_on:
+    gl = ax.gridlines(crs=ccrs.PlateCarree(), draw_labels=True,
+                      linewidth=1, color='gray', alpha=0.5, linestyle='--')
+    gl.xlabels_top = False
+    gl.ylabels_right = False
+    gl.xlocator = mticker.FixedLocator(np.arange(-180, 181, 20.))
+    gl.ylocator = mticker.FixedLocator(np.arange(-90., 91., 10.))
+    gl.xformatter = LONGITUDE_FORMATTER
+    gl.yformatter = LATITUDE_FORMATTER
+    gl.xlabel_style = {'color': 'black', 'weight': 'bold', 'size': 10}
+    gl.ylabel_style = {'color': 'black', 'weight': 'bold', 'size': 10}
+ax.text(-0.07, 0.55, 'latitude', va='bottom', ha='center',
+        rotation='vertical', rotation_mode='anchor',
+        transform=ax.transAxes)
+ax.text(0.5, -0.2, 'longitude', va='bottom', ha='center',
+        rotation='horizontal', rotation_mode='anchor',
+        transform=ax.transAxes)
