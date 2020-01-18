@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 
 def plot_ts_shade(ax, time, matrix, ts_label = '', ts_col = 'red',
                   shade_col = 'red', alpha = 0.2, skipna = False):
