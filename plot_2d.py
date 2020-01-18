@@ -8,11 +8,11 @@ def plot_ts_shade(ax, time, matrix, ts_label = '', ts_col = 'red',
     """
     if skipna:
         ts_min = np.nanmin(matrix, axis = 1)
-        ts_mean = np.nanmeann(matrix, axis = 1)
+        ts_mean = np.nanmean(matrix, axis = 1)
         ts_max = np.nanmax(matrix, axis = 1)
     else:
         ts_min = np.min(matrix, axis = 1)
-        ts_mean = np.meann(matrix, axis = 1)
+        ts_mean = np.mean(matrix, axis = 1)
         ts_max = np.max(matrix, axis = 1)
 
     hl, = ax.plot(time, ts_mean, '-', color = ts_col, linewidth = 2,
