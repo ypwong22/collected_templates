@@ -21,5 +21,5 @@ def plot_ts_shade(ax, time, matrix, ts_label = '', ts_col = 'red',
     ax.plot(time, ts_max, '--', color = shade_col, linewidth = 1)
     ax.fill_between(time, ts_min, ts_max, where = ts_max > ts_min,
                     facecolor = shade_col, alpha = alpha)
-    hfill, = ax.fill(np.nan, np.nan, shade_col, alpha = alpha)
+    hfill, = ax.fill(np.nan, np.nan, facecolor = shade_col, alpha = alpha)
     return hl, hfill
