@@ -42,9 +42,9 @@ ax.set_yticks([])
 ax.set_frame_on(False)
 
 norm = plt.Normalize(3, 6)
-colours = plt.cm.hot(norm(vals.values))
-the_table = ax.table(cellText=vals.values.astype(int),
-                     rowLabels=vals.index, colLabels=vals.columns,
+colours = plt.cm.hot(norm(df.values))
+the_table = ax.table(cellText=df.values.astype(int),
+                     rowLabels=df.index, colLabels=df.columns,
                      colWidths = [0.1]*vals.shape[1],
                      loc='center', fontsize = 16,
                      cellColours=colours)
