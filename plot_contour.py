@@ -14,18 +14,20 @@ source_lat = hr.lat.values[::-1] # reverse S->N
 source_lon = hr.lon.values # already 
 mask = hr['biomes'].values[::-1, :].copy() # reverse S->N
 keys = dict([(int(x.split('-')[0]), x.split('-')[1]) for x in hr['biomes'].attrs['biomes'].split('; ')])
+keys_keys = list(keys.keys())
 hr.close()
 
-pct_mask = np.full([len(keys.keys()), len(target_lat), len(target_lon)], np.nan)
-for ind, k in enumerate(list(keys.keys())):
+pct_mask = np.full([len(keys_keys), len(target_lat), len(target_lon)], np.nan)
+for ind, k in enumerate(keys_keys):
     mask_0 = xr.DataArray(np.abs(mask - k) < 1e-8, 
                           coords = {'lat': source_lat, 'lon': source_lon},
                           dims = ['lat', 'lon'])
     pct_mask[ind, :, :] = mask_0.interp(lat = target_lat, lon = target_lon).values
 # ---- fill by the maximum percentage area in each cell 
 new_mask = np.argmax(pct_mask, axis = 0)
-for i in 
-
+new_mask2 = np.full_like(new_mask, np.nan)
+for ind, k in enumerate(keys_keys):
+    new_mask2[np.abs(new_mask - ind) < 1e-8] = k
 
 xr.DataArray(new_mask, coords = {'lat': target_lat, 'lon': target_lon},
              dims = ['lat', 'lon'], 
