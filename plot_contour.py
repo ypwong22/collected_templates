@@ -12,7 +12,7 @@ target_lon = ... # numpy array
 hr = xr.open_dataset('Biomes.nc')
 source_lat = hr.lat.values[::-1] # reverse S->N
 source_lon = hr.lon.values # already 
-mask = hr['biomes].values[::-1, :].copy() # reverse S->N
+mask = hr['biomes'].values[::-1, :].copy() # reverse S->N
 keys = dict([(int(x.split('-')[0]), x.split('-')[1]) for x in hr['biomes'].attrs['biomes'].split('; ')])
 hr.close()
 
@@ -24,6 +24,13 @@ for ind, k in enumerate(list(keys.keys())):
     pct_mask[ind, :, :] = mask_0.interp(lat = target_lat, lon = target_lon).values
 # ---- fill by the maximum percentage area in each cell 
 new_mask = np.argmax(pct_mask, axis = 0)
+for i in 
+
+
+xr.DataArray(new_mask, coords = {'lat': target_lat, 'lon': target_lon},
+             dims = ['lat', 'lon'], 
+             attrs = '; '.join([str(i)+'-'+j for i,j in keys.items()]) \
+            ).to_dataset(name = 'biomes')
 
 fig, ax = plt.subplots(subplot_kw = {'projection': ccrs.Miller()})
 cf = ax.contourf(target_lon, target_lat, new_mask, cmap = 'Spectral')
