@@ -49,6 +49,5 @@ cf = ax.contourf(target_lon, target_lat, new_mask2, cmap = 'jet',
 hb = plt.colorbar(cf, ax = ax)
 hb.set_ticks(keys_keys)
 hb.set_ticklabels([keys[i] for i in keys_keys])
-fig.savefig(os.path.join(path_data, 'Biomes_interp.png'), dpi = 600.,
-            bbox_inches = 'tight')
+fig.savefig('Biomes_interp.png', dpi = 600., bbox_inches = 'tight')
 plt.close(fig)
