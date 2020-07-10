@@ -1,75 +1,47 @@
 ###############################################################################
-# Calculate and plot the global mean time series.
+# Global mean time series + Climatology diagnostics
 ###############################################################################
+import pandas as pd
 import xarray as xr
 import matplotlib.pyplot as plt
-
-fname = 'myfile.nc'
-data = xr.open_dataset(fname, decode_times = True)
-time = data['time'].indexes['time']
-var_ts = data['var'].mean(dim = ['lat', 'lon'])
-data.close()
-
-fig, ax = plt.subplots(figsize = (10, 10))
-ax.plot(time, var_ts, '-', color = 'k')
-ax.set_xlabel('Year')
-ax.set_ylabel('Var [Unit]')
-fig.savefig('myfig.png', dpi = 600., bbox_inches = 'tight')
-plt.close(fig)
-
-
-###############################################################################
-# Calculate and plot the global climatology.
-###############################################################################
-import matplotlib.pyplot as plt
-import matplotlib.ticker as mticker
+from matplotlib import gridspec
 import cartopy.crs as ccrs
-from cartopy.util import add_cyclic_point
-from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
-import xarray as xr
-import numpy as np
+
+def diagnosis(name, path_int, path_out, varname):
+    def decode_month_since(time):
+        start = time.attrs['units'].split(' ')[2]
+        return pd.date_range(start, periods = len(time), freq = '1M')
+
+    hr = xr.open_mfdataset(path_in, decode_times = False)
+    var = hr[varname].copy(deep = True)
+    if 'month' in hr['time'].attrs['units']:
+        var['time'] = decode_month_since(hr['time'])
+    else:
+        var['time'] = xr.decode_cf(hr)
+    hr.close()
 
 
-# Calculate the climatology.
-fname = 'myfile.nc'
-data = xr.open_dataset(fname, decode_times = True)
-var = data['var'].mean(dim = ['time'])
-data.close()
+    fig = plt.figure(figsize = (6.5, 8))
+    gs = gridspec.GridSpec(2, 1, hspace = 0.2, height_ratios = [0.8, 1.2])
 
+    # Time series
+    ax = plt.subplot(gs[0])
+    ax.plot(var['time'].to_index(), var.mean(dim = ['lat', 'lon']).values)
+    ax.set_title(name + ' time series')
 
-# Create the figure, get the panel (ax)
-...
+    # Map
+    ax = plt.subplot(gs[1], projection = ccrs.PlateCarree())
+    ax.coastlines()
+    ax.gridlines()
+    cf = ax.contourf(var.lon, var.lat, var.mean(dim = 'time'),
+                     cmap = 'Spectral')
+    plt.colorbar(cf, ax = ax, orientation = 'horizontal',
+                 pad = 0.05)
+    ax.set_title(name + ' climatology')
 
-# Options - Change here
-cmap = 'Spectral'
-levels = np.linspace(-1., 1., 10)
-map_extent = [-180, 180, -60, 90]
-grid_on = True # True, False
+    fig.savefig(path_out, dpi = 600., bbox_inches = 'tight')
+    plt.close(fig)
 
-
-# Generic module: var - some xr.DataArray
-ax.coastlines()
-ax.set_extent(map_extent)
-var_cyc, lon_cyc = add_cyclic_point(var, coord=var.lon)
-h = ax.contourf(lon_cyc, var.lat, var_cyc, cmap = cmap, levels = levels)
-plt.colorbar(h, ax = ax, boundaries = levels, ticks = 0.5 * (levels[1:] + levels[:-1]), shrink = 0.7)
-if grid_on:
-    gl = ax.gridlines(crs=ccrs.PlateCarree(), draw_labels=True,
-                      linewidth=1, color='gray', alpha=0.5, linestyle='--')
-    gl.xlabels_top = False
-    gl.ylabels_right = False
-    gl.xlocator = mticker.FixedLocator(np.arange(-180, 181, 20.))
-    gl.ylocator = mticker.FixedLocator(np.arange(-90., 91., 10.))
-    gl.xformatter = LONGITUDE_FORMATTER
-    gl.yformatter = LATITUDE_FORMATTER
-    gl.xlabel_style = {'color': 'black', 'weight': 'bold', 'size': 10}
-    gl.ylabel_style = {'color': 'black', 'weight': 'bold', 'size': 10}
-ax.text(-0.07, 0.55, 'latitude', va='bottom', ha='center',
-        rotation='vertical', rotation_mode='anchor',
-        transform=ax.transAxes)
-ax.text(0.5, -0.2, 'longitude', va='bottom', ha='center',
-        rotation='horizontal', rotation_mode='anchor',
-        transform=ax.transAxes)
 
 ###############################################################################
 # Calculate the annual maximum, minimum, and mean for each year and grid point.
