@@ -17,9 +17,8 @@ def diagnosis(name, path_int, path_out, varname):
     if 'month' in hr['time'].attrs['units']:
         var['time'] = decode_month_since(hr['time'])
     else:
-        var['time'] = xr.decode_cf(hr)
+        var['time'] = xr.decode_cf(hr)['time'].to_index()
     hr.close()
-
 
     fig = plt.figure(figsize = (6.5, 8))
     gs = gridspec.GridSpec(2, 1, hspace = 0.2, height_ratios = [0.8, 1.2])
