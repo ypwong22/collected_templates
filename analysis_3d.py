@@ -30,6 +30,8 @@ results = [pool.apply_async(calc_trend, args = (var1, ind)) for ind, var1 in enu
 pool.close()
 pool.join()
 
+result = [r.get() for r in result]
+
 trend = np.full(len(data.lat.values) * len(data.lon.values))
 for n in range(len(results)):
   trend[retain[results[n][-1]]] = results[n][0]
