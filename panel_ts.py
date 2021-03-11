@@ -1,11 +1,8 @@
 import numpy as np
 import pandas as pd
 import numpy as np
-from statsmodels.regression.linear_model import OLS
-from statsmodels.tools.tools import add_constant
-from tools.format_text import ppf
 
-
+#
 def ax_shade(ax, time, matrix, ts_label = '', ts_col = 'red',
                   shade_col = 'red', alpha = 0.2, skipna = False):
     """
@@ -28,8 +25,9 @@ def ax_shade(ax, time, matrix, ts_label = '', ts_col = 'red',
                     facecolor = shade_col, alpha = alpha)
     hfill, = ax.fill(np.nan, np.nan, facecolor = shade_col, alpha = alpha)
     return hl, hfill
-  
-  
+
+
+#
 def ax_oscillation(ax, inx_series):
     """A script to generate the common blue-red style ocean indices plot"""
     ax.fill_between(inx_series.index, inx_series.values, 0,
@@ -40,6 +38,12 @@ def ax_oscillation(ax, inx_series):
                     interpolate = True)
     ax.plot(inx_series.values, inx_series.values, '-k', lw = 0.5)
 
+
+#
+from statsmodels.regression.linear_model import OLS
+from statsmodels.tools.tools import add_constant
+
+from tools.format_text import ppf
 
 def ax_trend(ax, vector, pos_xy = [0.1, 0.9],
                 args_pt = {'ls': '-'},
