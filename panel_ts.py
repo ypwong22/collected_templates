@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-import numpy as np
+
 
 ####
 def ax_shade(ax, time, matrix, ts_label = '', ts_col = 'red',
