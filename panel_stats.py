@@ -3,7 +3,7 @@ from scipy.stats import norm
 from statsmodels.tsa.stattools import acf
 from sklearn.neighbors import KernelDensity
 
-def panel_histogram(ax, vector, bins, dist = 'norm',
+def histogram(ax, vector, bins, dist = 'norm',
                     args_hist = {'color': '#bdbdbd', 'edgecolor': '#636363'},
                     args_line = {'color': '#2b8cbe'}):
     """
@@ -27,7 +27,7 @@ def panel_histogram(ax, vector, bins, dist = 'norm',
         ax.plot(x, prob, '-', **args_line)
 
 
-def panel_acf(ax, vector, max_lag = 12,
+def acf(ax, vector, max_lag = 12,
               args_bar = {'color': '#bdbdbd', 'edgecolor': '#636363'},
               args_ci = {'color': 'k'}):
     """
