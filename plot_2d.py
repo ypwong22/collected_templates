@@ -31,18 +31,22 @@ import numpy as np
 from scipy.stats import norm
 
 def panel_histogram(ax, vector, bins,
-                    args_hist = {'color': '#bdbdbd', 'edgecolor': '#636363'}, 
+                    args_hist = {'color': '#bdbdbd', 'edgecolor': '#636363'},
                     args_line = {'color': '#2b8cbe'}):
     """
     Plot a histogram in panel with fitted Gaussian distribution.
     """
+    vector = vector[~np.isnan(vector)]
     hist, bin_edges = np.histogram(vector, bins = bins, density = True)
-    mean, std = norm.fit(hist)
+    mean, std = norm.fit(vector)
     x = np.linspace(bin_edges[0], bin_edges[-1], 100)
-    
+
     ax.bar(bin_edges[:-1], hist, width = bin_edges[1:] - bin_edges[:-1],
            align = 'edge', **args_hist)
     ax.plot(x, norm.pdf(x, mean, std), **args_line)
+
+#
+from statsmodels.tsa.stattools import acf
 
 
 ###############################################################################
