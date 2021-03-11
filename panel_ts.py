@@ -46,9 +46,9 @@ from statsmodels.tools.tools import add_constant
 from tools.format_text import ppf
 
 def ax_trend(ax, vector, pos_xy = [0.1, 0.9],
-                args_pt = {'ls': '-'},
-                args_ln = {'color': 'k'},
-                args_tx = {'color': 'k'}):
+             args_pt = {'ls': '-'},
+             args_ln = {'color': 'k'},
+             args_tx = {'color': 'k'}):
     """
     Plot the time series with trend.
     """
