@@ -122,4 +122,20 @@ def demodulated_amplitude_n_phase(time_series):
     time_series: 1-d array
         Time series of, e.g., monthly precipitation. Must be a multiple of 12.
     """
+    T = 12
+
+    # Transform
+    y = time_series * np.exp(-1j * 2 * np.pi / T * np.arange(1, len(time_series) + 1))
     
+    # Hanning window
+    weight = np.append(np.insert(np.ones(11), 0, 0.5), 0.5)
+    F = np.append(np.insert( 1/T * np.convolve(y, weight, mode = 'valid'), 0, 
+                             np.full(T//2, np.nan) ), np.full(T//2, np.nan))
+    A = 2 * np.sqrt( np.power(F.real, 2), np.power(F.imag, 2) )
+    theta = np.arctan( F.imag / F.real )
+    
+    # Resample to annual
+    A = A[::12]
+    theta = theta[::12]
+    
+    return A, theta
