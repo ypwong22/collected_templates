@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
 
-def panel_table(ax, df):
+def ax_table(ax, df):
     """
     Colored table according to values.
     """
@@ -20,7 +20,7 @@ def panel_table(ax, df):
     return the_table
 
 
-def panel_stack_bar(ax, x, matrix, color, edgecolor = None, **kwargs):
+def ax_stacked_bar(ax, x, matrix, color, edgecolor = None, **kwargs):
     """Stacked barplot with separate positive & negative values."""
     mat_pos = np.clip(matrix, 0., None)
     mat_pos_cum = np.cumsum(mat_pos, axis = 0)
