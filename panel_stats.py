@@ -1,7 +1,8 @@
 import numpy as np
-from scipy.stats import norm
-from statsmodels.tsa.stattools import acf
+
+####
 from sklearn.neighbors import KernelDensity
+from scipy.stats import norm
 
 def ax_histogram(ax, vector, bins, dist = 'norm',
                  args_hist = {'color': '#bdbdbd', 'edgecolor': '#636363'},
@@ -26,6 +27,8 @@ def ax_histogram(ax, vector, bins, dist = 'norm',
         prob = np.exp(kde.score_samples(x))
         ax.plot(x, prob, '-', **args_line)
 
+####
+from statsmodels.tsa.stattools import acf
 
 def ax_acf(ax, vector, max_lag = 12,
               args_bar = {'color': '#bdbdbd', 'edgecolor': '#636363'},
