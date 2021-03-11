@@ -6,7 +6,7 @@ from statsmodels.tools.tools import add_constant
 from tools.format_text import ppf
 
 
-def panel_shade(ax, time, matrix, ts_label = '', ts_col = 'red',
+def ax_shade(ax, time, matrix, ts_label = '', ts_col = 'red',
                   shade_col = 'red', alpha = 0.2, skipna = False):
     """
     Plot a shaded ensemble of time series.
@@ -30,7 +30,7 @@ def panel_shade(ax, time, matrix, ts_label = '', ts_col = 'red',
     return hl, hfill
   
   
-def panel_oscillation(ax, inx_series):
+def ax_oscillation(ax, inx_series):
     """A script to generate the common blue-red style ocean indices plot"""
     ax.fill_between(inx_series.index, inx_series.values, 0,
                     where = inx_series.values >= 0, color = 'r',
@@ -41,7 +41,7 @@ def panel_oscillation(ax, inx_series):
     ax.plot(inx_series.values, inx_series.values, '-k', lw = 0.5)
 
 
-def panel_trend(ax, vector, pos_xy = [0.1, 0.9],
+def ax_trend(ax, vector, pos_xy = [0.1, 0.9],
                 args_pt = {'ls': '-'},
                 args_ln = {'color': 'k'},
                 args_tx = {'color': 'k'}):
