@@ -1,3 +1,5 @@
+import numpy as np
+
 ####
 from statsmodels.regression.linear_model import OLS
 from statsmodels.tools.tools import add_constant
