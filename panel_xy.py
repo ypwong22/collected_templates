@@ -4,7 +4,7 @@ from statsmodels.tools.tools import add_constant
 from scipy.stats import gaussian_kde
 
 
-def panel_trend(ax, vector, pos_xy = [0.1, 0.9],
+def ax_trend(ax, vector, pos_xy = [0.1, 0.9],
                 args_pt = {'ls': '-'},
                 args_ln = {'color': 'k'},
                 args_tx = {'color': 'k'}):
@@ -27,7 +27,7 @@ def panel_trend(ax, vector, pos_xy = [0.1, 0.9],
             transform = ax.transAxes, **args_tx)
 
 
-def plot_scatter_density(ax, x, y, cmap = 'jet'):
+def ax_scatter_density(ax, x, y, cmap = 'jet'):
     """Plot 2D scatter plot, colored by local density."""
     loc = np.vstack([x.ravel(), y.ravel()])
     f = gaussian_kde(loc)
@@ -37,7 +37,7 @@ def plot_scatter_density(ax, x, y, cmap = 'jet'):
     return h
   
 
-def plot_colored_density(ax, x, y, cmap = 'jet'):
+def ax_colored_density(ax, x, y, cmap = 'jet'):
     """Plot 2D Gaussian kde density plot."""
     loc = np.vstack([x.ravel(), y.ravel()])
     f = gaussian_kde(loc)
