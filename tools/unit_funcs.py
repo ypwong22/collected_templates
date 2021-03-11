@@ -136,6 +136,6 @@ def demodulated_amplitude_n_phase(time_series):
     
     # Resample to annual
     A = A[::12]
-    theta = theta[::12]
+    theta = theta[::12] / np.pi / 2 * T # convert from angular frequency to period
     
     return A, theta
