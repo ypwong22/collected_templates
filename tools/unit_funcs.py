@@ -64,6 +64,7 @@ def centroid(vector):
     C = np.sum( np.arange(1, 13) * vector ) / np.sum(vector)
     return C
 
+
 def spread(vector, C = None):
     r"""
     Measures the duration of the wet season using the spread around the centroid.
