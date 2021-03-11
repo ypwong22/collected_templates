@@ -1,8 +1,6 @@
-from statsmodels.tsa.stattools import acf
+####
 from statsmodels.regression.linear_model import OLS
 from statsmodels.tools.tools import add_constant
-from scipy.stats import gaussian_kde
-
 
 def ax_trend(ax, vector, pos_xy = [0.1, 0.9],
                 args_pt = {'ls': '-'},
@@ -26,6 +24,8 @@ def ax_trend(ax, vector, pos_xy = [0.1, 0.9],
                 res.pvalues[1], res.pvalues[0]),
             transform = ax.transAxes, **args_tx)
 
+####
+from scipy.stats import gaussian_kde
 
 def ax_scatter_density(ax, x, y, cmap = 'jet'):
     """Plot 2D scatter plot, colored by local density."""
@@ -36,6 +36,8 @@ def ax_scatter_density(ax, x, y, cmap = 'jet'):
                    edgecolor = '')
     return h
   
+####
+from scipy.stats import gaussian_kde
 
 def ax_colored_density(ax, x, y, cmap = 'jet'):
     """Plot 2D Gaussian kde density plot."""
