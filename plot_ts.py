@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from statsmodels.regression.linear_model import OLS
 from statsmodels.tools.tools import add_constant
+from tools.format_text import ppf
 
 
 def panel_shade(ax, time, matrix, ts_label = '', ts_col = 'red',
