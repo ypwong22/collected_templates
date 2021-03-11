@@ -8,7 +8,7 @@ def _relative_entropy(vector, r_max):
     Parameters
     ----------
     vector: 1-d array
-        12-element vector corresponding to a 12-month climatology.
+        12-element vector corresponding to a 12-month climatology of the hydrological year.
     r_max: float
         whether to normalize the annual total by the global maximum in order to
         distinguish between different locations across the world
@@ -38,7 +38,7 @@ def longterm_seasonality(vector, r_max):
     Parameters
     ----------
     vector: 1-d array
-        12-element vector corresponding to a 12-month climatology.
+        12-element vector corresponding to a 12-month climatology of the hydrological year.
     r_max: float
         whether to normalize the annual total by the global maximum in order to
         distinguish between different locations across the world
@@ -59,7 +59,7 @@ def centroid(vector):
     Parameters
     ----------
     vector: 1-d array
-        12-element vector corresponding to a 12-month climatology.
+        12-element vector corresponding to a 12-month climatology of the hydrological year.
     """"    
     C = np.sum( np.arange(1, 13) * vector ) / np.sum(vector)
     return C
@@ -75,9 +75,31 @@ def spread(vector, C = None):
     Parameters
     ----------
     vector: 1-d array
-        12-element vector corresponding to a 12-month climatology.
+        12-element vector corresponding to a 12-month climatology of the hydrological year.
     """
     if C is None:
         C = centroid(vector)
     Z = np.sqrt( np.sum( np.power( np.arange(1, 13) - C, 2 ) * vector ) / np.sum(vector) )
     return Z
+
+
+def entropic_spread(vector):
+    r"""
+    An information theory-based measure for the support of the monthly rainfall distribution
+    in each year. Therefore, it is a measure of the duration of the rainy season and is
+    defined based on the information entropy of each year.
+    
+    Analogous to spread.
+    
+    Feng, X., A. Porporato, and I. Rodriguez-Iturbe, 2013: Changes in rainfall seasonality
+    in the tropics. Nature Clim Change, 3, 811–815, https://doi.org/10.1038/nclimate1907.
+
+    Parameters
+    ----------
+    vector: 1-d array
+        12-element vector corresponding to a 12-month climatology of the hydrological year.
+    """
+    frac_month = vector / np.sum(vector)
+    H = - np.sum( frac_month * np.log2(frac_month) ) # information entropy
+    E = np.sqrt( (np.power(2, 2 * H) - 1) / 12 )
+    return E
