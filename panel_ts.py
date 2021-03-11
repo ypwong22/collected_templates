@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import numpy as np
 
-#
+####
 def ax_shade(ax, time, matrix, ts_label = '', ts_col = 'red',
                   shade_col = 'red', alpha = 0.2, skipna = False):
     """
@@ -27,7 +27,7 @@ def ax_shade(ax, time, matrix, ts_label = '', ts_col = 'red',
     return hl, hfill
 
 
-#
+####
 def ax_oscillation(ax, inx_series):
     """A script to generate the common blue-red style ocean indices plot"""
     ax.fill_between(inx_series.index, inx_series.values, 0,
@@ -39,7 +39,7 @@ def ax_oscillation(ax, inx_series):
     ax.plot(inx_series.values, inx_series.values, '-k', lw = 0.5)
 
 
-#
+####
 from statsmodels.regression.linear_model import OLS
 from statsmodels.tools.tools import add_constant
 
