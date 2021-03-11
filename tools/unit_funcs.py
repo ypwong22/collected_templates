@@ -103,3 +103,23 @@ def entropic_spread(vector):
     H = - np.sum( frac_month * np.log2(frac_month) ) # information entropy
     E = np.sqrt( (np.power(2, 2 * H) - 1) / 12 )
     return E
+
+
+def demodulated_amplitude_n_phase(time_series):
+    r"""
+    The demodulated amplitude is akin to mean, and the demodulated phase is
+    akin to centroid. But they are derived based on localized harmonic analysis. 
+
+    The time series was multiplied by two sinusoidal functions, a low pass filter 
+    applied to isolate the low frequencies from the high frequencies, and 
+    the amplitude and phase of the low frequency component identified. 
+    
+    Feng, X., A. Porporato, and I. Rodriguez-Iturbe, 2013: Changes in rainfall seasonality
+    in the tropics. Nature Clim Change, 3, 811–815, https://doi.org/10.1038/nclimate1907.
+
+    Parameters
+    ----------
+    time_series: 1-d array
+        Time series of, e.g., monthly precipitation. Must be a multiple of 12.
+    """
+    
