@@ -1,14 +1,11 @@
+#
 import matplotlib.pyplot as plt
 import numpy as np
 
-
-###############################################################################
-# Shaded time series.
-###############################################################################
 def plot_ts_shade(ax, time, matrix, ts_label = '', ts_col = 'red',
                   shade_col = 'red', alpha = 0.2, skipna = False):
     """
-    Plot a shaded ensemble.
+    Plot a shaded ensemble of time series.
     """
     if skipna:
         ts_min = np.nanmin(matrix, axis = 1)
@@ -27,8 +24,27 @@ def plot_ts_shade(ax, time, matrix, ts_label = '', ts_col = 'red',
                     facecolor = shade_col, alpha = alpha)
     hfill, = ax.fill(np.nan, np.nan, facecolor = shade_col, alpha = alpha)
     return hl, hfill
-
   
+  
+# 
+import numpy as np
+from scipy.stats import norm
+
+def panel_histogram(ax, vector, bins,
+                    args_hist = {'color': '#bdbdbd', 'edgecolor': '#636363'}, 
+                    args_line = {'color': '#2b8cbe'}):
+    """
+    Plot a histogram in panel with fitted Gaussian distribution.
+    """
+    hist, bin_edges = np.histogram(vector, bins = bins, density = True)
+    mean, std = norm.fit(hist)
+    x = np.linspace(bin_edges[0], bin_edges[-1], 100)
+    
+    ax.bar(bin_edges[:-1], hist, width = bin_edges[1:] - bin_edges[:-1],
+           align = 'edge', **args_hist)
+    ax.plot(x, norm.pdf(x, mean, std), **args_line)
+
+
 ###############################################################################
 # Colored table according to values
 ###############################################################################
