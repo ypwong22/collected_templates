@@ -1,19 +1,21 @@
 ###############################################################################
 # De-trend from each column of a pandas dataframe
 ###############################################################################
-import statsmodels.api as stats
+from scipy.stats import linregress
 
-...
+def one_func(vector):
+   result = linregress(np.arange(len(vector)),
+                       vector)
+   return result.slope
 
-data = ... # a pandas data frame
-
-data_detrend = data.copy(deep = True)
-for c in range(data.shape[1]):
-    x = range(data.shape[0])
-    mod = stats.OLS(data.iloc[:, c], stats.add_constant(x))
-    results = mod.fit()
-    
-    data_detrend.iloc[:, c] = data.iloc[:, c] - results.params[1] * x
+def detrend_2d(met):
+    """ Remove the linear trend from each column."""
+    trend = met.T.apply(one_func, axis = 1, raw = True,
+                        broadcast = True).T
+    trend = np.matmul(np.diag(np.arange(trend.shape[0])),
+                      trend)
+    met = met - trend
+    return met, trend
 
 
 ###############################################################################
