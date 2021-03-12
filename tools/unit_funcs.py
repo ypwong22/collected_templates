@@ -105,7 +105,7 @@ def entropic_spread(vector):
     return E
 
 
-def demodulated_amplitude_n_phase(time_series):
+def demodulated_amplitude_n_phase(x, time_series):
     r"""
     The demodulated amplitude is akin to mean, and the demodulated phase is
     akin to centroid. But they are derived based on localized harmonic analysis. 
@@ -119,23 +119,43 @@ def demodulated_amplitude_n_phase(time_series):
 
     Parameters
     ----------
+    x: 1-d array
+        Numeric time step; Must match with the phase of the time series, or the
+        estimated theta will be phase-shifted. 
     time_series: 1-d array
         Time series of, e.g., monthly precipitation. Must be a multiple of 12.
+
+    Unit test
+    ----------
+    n = 240
+    trend = 0.05; trend2 = -0.00035
+    x = np.arange(250, n + 250)
+    time_series = 100 + 50 * trend * np.arange(n) * \
+        np.cos(2 * np.pi / 12 * (x + trend2 * np.arange(n))) + \
+        np.random.rand(n)
+    A, theta = demodulated_amplitude_n_phase(x, time_series)
+
+    fig, ax = plt.subplots(1, 2)
+    ax[0].plot(x, trend * np.arange(n) * 50, '-r')
+    ax[0].plot(x[::12], A, '-b')
+    ax[1].plot(x, trend2 * np.arange(n), '-r')
+    ax[1].plot(x[::12], theta, '-b')
+    plt.close(fig)
     """
     T = 12
 
     # Transform
-    y = time_series * np.exp(-1j * 2 * np.pi / T * np.arange(1, len(time_series) + 1))
+    y = time_series * np.exp(-1j * 2 * np.pi / T * x)
     
     # Hanning window
-    weight = np.append(np.insert(np.ones(11), 0, 0.5), 0.5)
+    weight = np.append(np.insert(np.ones(T - 1), 0, 0.5), 0.5)
     F = np.append(np.insert( 1/T * np.convolve(y, weight, mode = 'valid'), 0, 
                              np.full(T//2, np.nan) ), np.full(T//2, np.nan))
     A = 2 * np.sqrt( np.power(F.real, 2) + np.power(F.imag, 2) )
     theta = np.arctan( F.imag / F.real )
-    
+
     # Resample to annual
     A = A[::12]
     theta = theta[::12] / np.pi / 2 * T # convert from angular frequency to period
-    
+
     return A, theta
