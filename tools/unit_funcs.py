@@ -114,6 +114,9 @@ def demodulated_amplitude_n_phase(x, time_series):
     applied to isolate the low frequencies from the high frequencies, and 
     the amplitude and phase of the low frequency component identified. 
     
+    Also, it appears, based on the unit test, that there is a burn-in period in the
+    phase estimation. The first 240-360 theta (20-30 years) won't be accurate.
+    
     Feng, X., A. Porporato, and I. Rodriguez-Iturbe, 2013: Changes in rainfall seasonality
     in the tropics. Nature Clim Change, 3, 811–815, https://doi.org/10.1038/nclimate1907.
 
