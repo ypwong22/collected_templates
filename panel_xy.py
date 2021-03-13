@@ -58,7 +58,7 @@ def ax_regress(ax, x, vector,
                     reg.pvalues[1], reg.pvalues[0]),
                 transform = ax.transAxes, **args_tx)
     elif display == 'pearson':
-        r, pval = pearsonr(x, temp)
+        r, pval = pearsonr(x, vector)
         ax.text(pos_xy[0], pos_xy[1],
                 ('%.3f' % r) + ppp(pval),
                 transform = ax.transAxes, **args_tx)
