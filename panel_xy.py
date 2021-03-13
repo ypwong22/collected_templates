@@ -13,7 +13,7 @@ def ax_regress(ax, x, vector,
                pos_xy = [0.1, 0.9],
                args_pt = {'ls': '-'},
                args_ln = {'color': 'k'},
-               args_ci = {'color': 'k', 'alpha': 'shade'},
+               args_ci = {'color': 'k', 'alpha': 0.2},
                args_tx = {'color': 'k'}):
     """
     Plot the time series with trend.
