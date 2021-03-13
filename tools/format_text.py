@@ -31,4 +31,4 @@ def ppf(slope, intercept, p_slope, p_intercept):
         fintercept = ' - ' + fintercept
     fintercept += ppp(p_intercept)
 
-    return 'y = ' + fslope + u'\u00d7' + 'x' + fintercept
+    return r'$y = ' + fslope + u'\u00d7' + ' $x$' + fintercept + '$'
