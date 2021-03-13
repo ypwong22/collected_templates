@@ -37,7 +37,7 @@ def ax_acf(ax, vector, max_lag = 12,
     Plot the autocorrelation function of the time series.
     """
     rho, confint, qstat, pvalues = \
-        acf(vector, unbiased = True, nlags = max_lag, qstat = True,
+        acf(vector[~np.isnan(vector)], unbiased = True, nlags = max_lag, qstat = True,
             alpha = 0.05)
 
     x = range(1, max_lag + 1)
