@@ -60,7 +60,7 @@ def centroid(vector):
     ----------
     vector: 1-d array
         12-element vector corresponding to a 12-month climatology of the hydrological year.
-    """"    
+    """
     C = np.sum( np.arange(1, 13) * vector ) / np.sum(vector)
     return C
 
