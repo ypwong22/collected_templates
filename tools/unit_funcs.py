@@ -162,3 +162,47 @@ def demodulated_amplitude_n_phase(x, time_series):
     theta = theta[::12] / np.pi / 2 * T # convert from angular frequency to period
 
     return A, theta
+
+
+####
+import xarray as xr
+import pandas as pd
+
+def frequency(ts, time = None):
+    """
+    Calculate the monthly precipitation frequency in a daily time series.
+
+    Parameters
+    ----------
+    ts: 1-d array
+        Can be a pandas Series, numpy array, list, or xarray.DataArray.
+        Must have a 'time' dimension if xarray.DataArray.        
+    time: 
+    """
+    if time is None:
+        if type(ts) == xr.DataArray:
+            ts = pd.Series(ts.values, index = ts['time'])
+    else:
+        ts = pd.Series(np.array(ts), index = time)
+    ts = (ts > 0).astype(np.float)
+    return ts.resample('MS').mean()
+
+
+def intensity(ts, time = None):
+    """
+    Calculate the monthly precipitation intensity (wet days) in a daily time series.
+
+    Parameters
+    ----------
+    ts: 1-d array
+        Can be a pandas Series, numpy array, list, or xarray.DataArray.
+        Must have a 'time' dimension if xarray.DataArray.        
+    time: 
+    """
+    if time is None:
+        if type(ts) == xr.DataArray:
+            ts = pd.Series(ts.values, index = ts['time'])
+    else:
+        ts = pd.Series(np.array(ts), index = time)
+    return ts.resample('MS').mean()
+
