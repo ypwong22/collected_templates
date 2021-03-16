@@ -188,7 +188,7 @@ def frequency(ts, time = None):
     return ts.resample('MS').mean()
 
 
-def intensity(ts, time = None):
+def intensity(ts, tvec = None):
     """
     Calculate the monthly precipitation intensity (wet days) in a daily time series.
 
@@ -197,12 +197,12 @@ def intensity(ts, time = None):
     ts: 1-d array
         Can be a pandas Series, numpy array, list, or xarray.DataArray.
         Must have a 'time' dimension if xarray.DataArray.        
-    time: 
+    tvec: pandas DatetimeIndex
     """
-    if time is None:
+    if tvec is None:
         if type(ts) == xr.DataArray:
             ts = pd.Series(ts.values, index = ts['time'])
     else:
-        ts = pd.Series(np.array(ts), index = time)
+        ts = pd.Series(np.array(ts), index = tvec)
     return ts.resample('MS').mean()
 
