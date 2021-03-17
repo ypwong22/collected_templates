@@ -95,10 +95,18 @@ def seasonal_avg(data_array):
         result[season] = data_temp
     return result
 
-  
+
 ###############################################################################
 # Frequency, Intensity, Mean of daily to monthly precipitation.
 ###############################################################################
 frequency = (da > 0.).resample({'time': '1M'}).mean()
 intensity = (da.where(da > 0.)).resample({'time': '1M'}).mean()
 mean = da.resample({'time': '1M'}).mean()
+
+
+###############################################################################
+# Interpolate data array (if doesn't care about missing boundary grids).
+###############################################################################
+target_lat = np.arange(-89.75, 89.76, 0.5)
+target_lon = np.arange(-179.75, 179.76, 0.5)
+da.interp(coords = {'lon': target_lon, 'lat': target_lat}).load()
