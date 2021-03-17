@@ -68,6 +68,8 @@ def detrend(sst):
    sst = sst - trend
    return sst, trend
 
+  
+
 ###############################################################################
 # Calculate the annual + seasonal average of a xarray DataArray. Assuming the
 # time series starts from Jan and ends in Dec. Return DataFrame.
@@ -92,3 +94,11 @@ def seasonal_avg(data_array):
             data_temp = data_temp[:-1, :, :]
         result[season] = data_temp
     return result
+
+  
+###############################################################################
+# Frequency, Intensity, Mean of daily to monthly precipitation.
+###############################################################################
+frequency = (da > 0.).resample({'time': '1M'}).mean()
+intensity = (da.where(da > 0.)).resample({'time': '1M'}).mean()
+mean = da.resample({'time': '1M'}).mean()
