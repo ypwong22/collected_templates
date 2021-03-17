@@ -176,12 +176,12 @@ def frequency(ts, time = None):
     ----------
     ts: 1-d array
         Can be a pandas Series, numpy array, list, or xarray.DataArray.
-        Must have a 'time' dimension if xarray.DataArray.        
-    time: 
+        Must have a 'time' dimension if xarray.DataArray.
+    time:
     """
     if time is None:
         if type(ts) == xr.DataArray:
-            ts = pd.Series(ts.values, index = ts['time'])
+            ts = pd.Series(ts.values, index = ts['time'].to_index())
     else:
         ts = pd.Series(np.array(ts), index = time)
     ts = (ts > 0).astype(np.float)
