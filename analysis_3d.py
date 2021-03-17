@@ -48,15 +48,11 @@ trend = xr.DataArray(trend.reshape(len(data.lat.values),
 ###############################################################################
 import xarray as xr
 from scipy.stats import linregress
-
-def one_func(vector):
-   result = linregress(np.arange(len(vector)),
-                       vector)
-   return result.slope
+from utils.tools.unit_funcs import unit_trend
 
 def detrend(sst):
    """ Remove the linear trend from each grid."""
-   trend = xr.apply_ufunc(one_func,
+   trend = xr.apply_ufunc(unit_trend,
                           sst, input_core_dims = [['time']],
                           vectorize = True, dask = 'allowed')
    trend = np.broadcast_to((np.arange(sst.shape[0]) - \
@@ -68,7 +64,6 @@ def detrend(sst):
    sst = sst - trend
    return sst, trend
 
-  
 
 ###############################################################################
 # Calculate the annual + seasonal average of a xarray DataArray. Assuming the
