@@ -15,7 +15,7 @@ def _relative_entropy(vector, r_max):
         (norm_frac = 7932 mm yr^{-1} at Tabubil, Papua New Guinea in the original paper).
 
     Feng, X., A. Porporato, and I. Rodriguez-Iturbe, 2013: Changes in rainfall seasonality
-    in the tropics. Nature Clim Change, 3, 811–815, https://doi.org/10.1038/nclimate1907.
+    in the tropics. Nature Clim Change, 3, 811-815, https://doi.org/10.1038/nclimate1907.
     """
     frac_month = vector / np.sum(vector)
     if not (r_max is None):
@@ -29,7 +29,7 @@ def longterm_seasonality(vector, r_max):
     The long-term seasonality index defined in
     
     Feng, X., A. Porporato, and I. Rodriguez-Iturbe, 2013: Changes in rainfall seasonality
-    in the tropics. Nature Clim Change, 3, 811–815, https://doi.org/10.1038/nclimate1907.
+    in the tropics. Nature Clim Change, 3, 811-815, https://doi.org/10.1038/nclimate1907.
     
     Meausures the evenness of the distribution of precipitation over months.
     Uses relative entropy and ranges between 0 and log_2(12) = 3.585, with larger
@@ -54,7 +54,7 @@ def centroid(vector):
     Measures the timing of rainfall using the first moment.
 
     Feng, X., A. Porporato, and I. Rodriguez-Iturbe, 2013: Changes in rainfall seasonality
-    in the tropics. Nature Clim Change, 3, 811–815, https://doi.org/10.1038/nclimate1907.
+    in the tropics. Nature Clim Change, 3, 811-815, https://doi.org/10.1038/nclimate1907.
 
     Parameters
     ----------
@@ -70,7 +70,7 @@ def spread(vector, C = None):
     Measures the duration of the wet season using the spread around the centroid.
 
     Feng, X., A. Porporato, and I. Rodriguez-Iturbe, 2013: Changes in rainfall seasonality
-    in the tropics. Nature Clim Change, 3, 811–815, https://doi.org/10.1038/nclimate1907.
+    in the tropics. Nature Clim Change, 3, 811-815, https://doi.org/10.1038/nclimate1907.
 
     Parameters
     ----------
@@ -92,7 +92,7 @@ def entropic_spread(vector):
     Analogous to spread.
     
     Feng, X., A. Porporato, and I. Rodriguez-Iturbe, 2013: Changes in rainfall seasonality
-    in the tropics. Nature Clim Change, 3, 811–815, https://doi.org/10.1038/nclimate1907.
+    in the tropics. Nature Clim Change, 3, 811-815, https://doi.org/10.1038/nclimate1907.
 
     Parameters
     ----------
@@ -118,7 +118,7 @@ def demodulated_amplitude_n_phase(x, time_series):
     phase estimation. The first 240-360 theta (20-30 years) won't be accurate.
     
     Feng, X., A. Porporato, and I. Rodriguez-Iturbe, 2013: Changes in rainfall seasonality
-    in the tropics. Nature Clim Change, 3, 811–815, https://doi.org/10.1038/nclimate1907.
+    in the tropics. Nature Clim Change, 3, 811-815, https://doi.org/10.1038/nclimate1907.
 
     Parameters
     ----------
