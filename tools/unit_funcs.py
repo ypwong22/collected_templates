@@ -1,6 +1,34 @@
 import numpy as np
 import xarray as xr
 import pandas as pd
+from scipy.stats import linregress
+
+
+####
+def unit_trend(vector):
+    result = linregress(np.arange(len(vector)),
+                        vector)
+    return result.slope
+
+
+def unit_trend_pval(vector):
+    result = linregress(np.arange(len(vector)),
+                        vector)
+    return np.array([result.slope, result.pvalue])
+
+
+def unit_circular_trend(vector):
+    """
+    Use circular linear regression between the circular variable and year.
+
+    Parameters
+    ----------
+    vector: 1-d array
+    month, range limited to [1, 13) """
+    
+    if (np.min(vector) < 1) | (np.max(vector) > 12):
+        raise Exception('Invalid range of the input')
+    ## TBC
 
 
 ####
@@ -28,8 +56,14 @@ def _relative_entropy(vector, r_max):
     frac_month = vector / np.sum(vector, axis = 1, keepdims = True)
     if not (r_max is None):
         frac_month *= r_max
-    D = np.sum(frac_month * np.log2(frac_month * 12),
-               axis = 1, keepdims = False)
+
+    # handle zero values when all seasons are zero: uniform
+    frac_month[np.sum(vector, axis = 1) < 1e-10, :] = 1 / 12
+
+    temp = np.log2(frac_month * 12)
+    temp[~np.isfinite(temp)] = 0. # handle zero values
+    
+    D = np.sum(frac_month * temp, axis = 1, keepdims = False)
     return D
 
 
@@ -79,6 +113,9 @@ def centroid(vector):
     vector = vector.reshape(-1, 12)
     C = np.sum( vector * np.arange(1, 13).reshape(1, -1), axis = 1 ) \
         / np.sum(vector, axis = 1)
+
+    # handle zero values when all seasons are zero: uniform
+    C[np.sum(vector, axis = 1) < 1e-10] = np.mean(np.arange(1, 13))
     return C
 
 
@@ -103,6 +140,8 @@ def spread(vector, C = None):
                                    C.reshape(-1, 1), 2 ) * \
                          vector.reshape(-1, 12), axis = 1 ) / \
                  np.sum( vector.reshape(-1, 12), axis = 1) )
+    # handle zero values when all seasons are zero: uniform
+    Z[np.sum(vector, axis = 1) < 1e-10] = np.std(np.arange(1, 13))
     return Z
 
 
