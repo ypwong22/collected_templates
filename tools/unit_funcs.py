@@ -136,10 +136,10 @@ def spread(vector, C = None):
     """
     if C is None:
         C = centroid(vector)
+    vector = vector.reshape(-1, 12)
     Z = np.sqrt( np.sum( np.power( np.arange(1,13).reshape(1,-1) - \
                                    C.reshape(-1, 1), 2 ) * \
-                         vector.reshape(-1, 12), axis = 1 ) / \
-                 np.sum( vector.reshape(-1, 12), axis = 1) )
+                         vector, axis = 1 ) / np.sum(vector, axis = 1) )
     # handle zero values when all seasons are zero: uniform
     Z[np.sum(vector, axis = 1) < 1e-10] = np.std(np.arange(1, 13))
     return Z
