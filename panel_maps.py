@@ -1,3 +1,24 @@
+def ax_contourf_hatch(ax, da, da_mask,
+                      da_args = {},
+                      mask_args = {'hatches': ['', '/////////'],
+                                   'alpha': 0.5,
+                                   'zorder': 3}):
+    """
+    Plot map with hatched area.
+    
+    Parameters
+    ----------
+    da: 2-d xarray.DataArray
+        The values to plot.
+    da_mask: 2-d xarray.DataArray
+        The boolean values to mask over.
+    """
+    cf = ax.contourf(da['lon'], da['lat'], da, **da_args)
+    cf2 = ax.contourf(da_mask['lon'], da_mask['lat'],
+                      da_mask.astype(int), colors = 'none', **mask_args)
+    return cf, cf2
+
+
 ###############################################################################
 # Interpolate and plot NetCDF file of multi-region masks
 ###############################################################################
