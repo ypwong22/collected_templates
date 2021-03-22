@@ -1,3 +1,19 @@
+#
+from matplotlib import colors
+from matplotlib import cm
+
+def cmap_div():
+    """
+    Colormap with clear division between positive and negative values in the middle.
+    """
+    c = cm.get_cmap('gist_ncar_r', 256)
+    new1 = c(np.linspace(0.1, 0.5, 128))
+    new2 = c(np.linspace(0.6, 1., 128))
+    newcmp = colors.ListedColormap(np.concatenate([new1, new2], axis = 0))
+    return newcmp
+
+
+#
 def ax_contourf_hatch(ax, da, da_mask,
                       da_args = {},
                       mask_args = {'hatches': ['', '/////////'],
