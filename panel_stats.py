@@ -38,6 +38,14 @@ def ax_histogram(ax, vector, bins, dist = 'norm',
                     width = bin_edges[1:] - bin_edges[:-1],
                     align = 'edge', **args_hist)
         h.append(h1)
+ 
+        # convenience to insure edge is not transparent.
+        if 'alpha' in args_hist:
+            del args_hist['alpha']
+            args_hist['facecolor'] = 'None'
+            ax.bar(bin_edges[:-1], hist,
+                   width = bin_edges[1:] - bin_edges[:-1],
+                   align = 'edge', **args_hist)
 
     if (show == 'line') | (show == 'both'):
         x = np.linspace(bin_edges[0], bin_edges[-1], 100)
