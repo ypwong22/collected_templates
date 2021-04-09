@@ -68,6 +68,7 @@ da.interp(coords = {'lon': target_lon, 'lat': target_lat}).load()
 ###############################################################################
 def flip_lon(da):
     lon_dim = [dd for dd in da.dims if dd.lower() in ['lon','longitude']][0]
-    da = da.roll({lon_dim: 180}, roll_coords = True)
+    da = da.roll({lon_dim: sum(da[lon_dim].values > 180)},
+                 roll_coords = True)
     da[lon_dim] = np.where(da[lon_dim] > 180,
-                           360. - da[lon_dim], da[lon_dim])
+                           da[lon_dim] - 360, da[lon_dim])
