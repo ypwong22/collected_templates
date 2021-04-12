@@ -115,7 +115,7 @@ def centroid(vector):
         / np.sum(vector, axis = 1)
 
     # handle zero values when all seasons are zero: uniform
-    C[np.sum(vector, axis = 1) < 1e-10] = np.mean(np.arange(1, 13))
+    C[np.std(vector, axis = 1) < 1e-10] = np.mean(np.arange(1, 13))
     return C
 
 
