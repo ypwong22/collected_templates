@@ -72,3 +72,15 @@ def flip_lon(da):
                  roll_coords = True)
     da[lon_dim] = np.where(da[lon_dim] > 180,
                            da[lon_dim] - 360, da[lon_dim])
+    return da
+
+###############################################################################
+# Flip longitude from -180 to 180 to 360.
+###############################################################################
+def flip_lon2(da):
+    lon_dim = [dd for dd in da.dims if dd.lower() in ['lon','longitude']][0]
+    da = da.roll({lon_dim: - sum(da[lon_dim].values < 0)},
+                 roll_coords = True)
+    da[lon_dim] = np.where(da[lon_dim] < 0,
+                           da[lon_dim] + 360, da[lon_dim])
+    return da
