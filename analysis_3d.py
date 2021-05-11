@@ -89,8 +89,8 @@ def flip_lon2(da):
 # Apply the rectangular mask on the data array.
 ###############################################################################
 def apply_rect_mask(da, mask):
-    """ mask: [lon_min, lon_max, lat_min, lat_max] """
-    lon_mask = (da['lon'].values >= mask[0]) & (da['lon'].values <= mask[1])
-    lat_mask = (da['lat'].values >= mask[2]) & (da['lat'].values <= mask[3])
+    """ mask: [lon_min, lat_min, lon_max, lat_max] """
+    lon_mask = (da['lon'].values >= mask[0]) & (da['lon'].values <= mask[2])
+    lat_mask = (da['lat'].values >= mask[1]) & (da['lat'].values <= mask[3])
     lon_mask, lat_mask = np.meshgrid(lon_mask, lat_mask)
     return da.where(lon_mask & lat_mask)
