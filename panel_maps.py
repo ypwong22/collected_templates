@@ -38,7 +38,7 @@ def ax_contourf_hatch(ax, da, da_mask,
 def ax_contourf_shade(ax, da, da_mask,
                       da_args = {},
                       mask_args = {'colors': ['w'],
-                                   'alpha': 0.5,
+                                   'alpha': 0.7,
                                    'zorder': 3}):
     """
     Plot map with the da_mask = False regions shaded.
