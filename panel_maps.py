@@ -17,7 +17,7 @@ def cmap_div():
 def ax_contourf_hatch(ax, da, da_mask,
                       da_args = {'alpha': 0.5},
                       mask_args = {'hatches': ['', '/////////'],
-                                   'colors': None,
+                                   'colors': 'none',
                                    'zorder': 3}):
     """
     Plot map with hatched area.
