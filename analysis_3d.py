@@ -84,3 +84,13 @@ def flip_lon2(da):
     da[lon_dim] = np.where(da[lon_dim] < 0,
                            da[lon_dim] + 360, da[lon_dim])
     return da
+
+###############################################################################
+# Apply the rectangular mask on the data array.
+###############################################################################
+def apply_rect_mask(da, mask):
+    """ mask: [lon_min, lon_max, lat_min, lat_max] """
+    lon_mask = (da['lon'].values >= mask[0]) & (da['lon'].values <= mask[1])
+    lat_mask = (da['lat'].values >= mask[2]) & (da['lat'].values <= mask[3])
+    lon_mask, lat_mask = np.meshgrid(lon_mask, lat_mask)
+    return da.where(lon_mask & lat_mask)
