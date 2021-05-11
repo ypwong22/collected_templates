@@ -15,9 +15,9 @@ def cmap_div():
 
 #
 def ax_contourf_hatch(ax, da, da_mask,
-                      da_args = {},
+                      da_args = {'alpha': 0.5},
                       mask_args = {'hatches': ['', '/////////'],
-                                   'alpha': 0.5,
+                                   'colors': None,
                                    'zorder': 3}):
     """
     Plot map with hatched area.
@@ -31,17 +31,18 @@ def ax_contourf_hatch(ax, da, da_mask,
     """
     cf = ax.contourf(da['lon'], da['lat'], da, **da_args)
     cf2 = ax.contourf(da_mask['lon'], da_mask['lat'],
-                      da_mask.astype(int), colors = 'none', **mask_args)
+                      da_mask.astype(int), levels = [-0.5, 0.5, 1.5], 
+                      **mask_args)
     return cf, cf2
 
 #
 def ax_contourf_shade(ax, da, da_mask,
                       da_args = {},
                       mask_args = {'colors': ['w'],
-                                   'alpha': 0.7,
+                                   'alpha': 0.8,
                                    'zorder': 3}):
     """
-    Plot map with the da_mask = False regions shaded.
+    Plot map with the da_mask = True regions shaded.
 
     Parameters
     ----------
@@ -52,7 +53,9 @@ def ax_contourf_shade(ax, da, da_mask,
     """
     cf = ax.contourf(da['lon'], da['lat'], da, **da_args)
     cf2 = ax.contourf(da_mask['lon'], da_mask['lat'],
-                      da_mask.where(~da_mask), **mask_args)
+                      da_mask.where(da_mask),
+                      levels = [0.5, 1.5],
+                      **mask_args)
     return cf, cf2
 
 
