@@ -3,11 +3,11 @@ import numpy as np
 def ppp(p_value):
     """ Use atsterisks to denote p-values. """
     if p_value <= 0.01:
-        return '$^{***}$'
+        return '^{***}'
     elif p_value <= 0.05:
-        return '$^{**}$'
+        return '^{**}'
     elif p_value <= 0.1:
-        return '$^{*}$'
+        return '^{*}'
     else:
         return ''
 
@@ -31,4 +31,4 @@ def ppf(slope, intercept, p_slope, p_intercept):
         fintercept = ' - ' + fintercept
     fintercept += ppp(p_intercept)
 
-    return r'$y = ' + fslope + u' \u00d7 ' + 'x' + fintercept + '$'
+    return r'$y = ' + fslope + r' \times x' + fintercept + r'$'
