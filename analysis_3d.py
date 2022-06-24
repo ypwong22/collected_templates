@@ -24,6 +24,8 @@ def detrend(sst):
 # Fast calculation of trend for each grid of a 3D [time, lat, lon]
 # np.ma.array.
 ###############################################################################
+import warnings
+
 def _normalize(ma_array):
     temp = np.where(ma_array.mask, np.nan, ma_array.data)
     with warnings.catch_warnings():
