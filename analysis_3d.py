@@ -24,6 +24,18 @@ def detrend(sst):
 # Fast calculation of trend for each grid of a 3D [time, lat, lon]
 # np.ma.array.
 ###############################################################################
+def _normalize(ma_array):
+    temp = np.where(ma_array.mask, np.nan, ma_array.data)
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", category = RuntimeWarning)
+        n_mean = np.nanmean(temp, axis = 0, keepdims = True)
+        n_std = np.nanstd(temp, axis = 0, keepdims = True)
+
+    temp = (temp - n_mean) / np.where((n_std > 0.) | np.isnan(n_std), n_std, 
+                                       np.nanmin(n_std[n_std > 0.]) * 1e-3)
+    temp = np.ma.masked_where(ma_array.mask, temp)
+    return temp, n_mean, n_std
+
 def _olsTensor(Y, x):
     """ Repeated calculation of linear regression in the spatial dimensions.
     Parameters
