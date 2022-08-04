@@ -167,6 +167,75 @@ def seasonal_avg(data_array):
     return result
 
 
+##################################################################################
+# Calculate the grid-level climatology, seasonality, trend, and anomalies
+# for an xarray.DataArray, whose dimensions are ['time', 'lat', 'lon']
+##################################################################################
+import numpy as np
+import xarray as xr
+# use olsTensor
+
+def _grid_decompose(da):
+   da.load() # makes things faster
+
+   clim          = da.mean(dim = 'time')
+   seasonal_anom = da.groupby('time.month').mean()
+   max_month     = seasonal_anom.idxmax(dim = 'month')
+
+   anomalies     = da.copy(deep = True)
+   for i in range(1, 13):
+      anomalies[(i-1)::12, :, :] = anomalies[(i-1)::12, :, :].values - \
+          clim.values - seasonal_anom[i-1, :, :].values
+
+   temp2         = np.ma.MaskedArray(anomalies.values, np.isnan(anomalies.values)).reshape(-1, 12, anomalies.shape[1], anomalies.shape[2])
+   x             = np.arange(temp2.shape[0]) - np.mean(np.arange(temp2.shape[0]))
+   beta, pval    = olsTensor(temp2, x)
+
+   trend         = xr.DataArray(beta, dims = ['month', 'lat', 'lon'],
+                              coords = {'month': seasonal_anom['month'],
+                                      'lat'  : seasonal_anom['lat'], 
+                                      'lon'  : seasonal_anom['lon']})
+
+   for i in range(1, 13):
+      anomalies[(i-1)::12, :, :] = anomalies[(i-1)::12, :, :].values - x.reshape(-1, 1, 1) * beta[[i-1], :, :]
+   anomalies_std = anomalies.std(dim = 'time')
+
+   return clim, max_month, trend, anomalies_std
+
+
+##################################################################################
+# Calculate the climatology, seasonality, trend, and anomalies on the 
+# averaged time series of an xarray.DataArray, whose dimensions are 
+# ['time', 'lat', 'lon']
+##################################################################################
+import numpy as np
+import pandas as pd
+# use olsTensor
+
+def _ts_decompose(self, da):
+   weights       = np.cos(da['lat'] * np.pi / 180)
+   da_series     = da.weighted(weights).mean(['lat', 'lon'])
+
+   annual_avg    = da_series.resample({'time': '1Y'}).mean()
+
+   seasonal_anom = da_series.groupby('time.month').mean() - float(da_series.mean())
+   seasonal_anom = pd.Series(seasonal_anom.values, index = seasonal_anom['month'].values)
+
+   temp          = da_series.values.reshape(-1, 12) - clim - seasonal_anom.values.reshape(1, 12)
+
+   temp2         = np.ma.MaskedArray(temp, False)
+   x             = np.arange(temp2.shape[0]) - np.mean(np.arange(temp2.shape[0]))
+   beta, pval    = olsTensor(temp2, x)
+   trend         = pd.Series(beta, index = range(1,13))
+
+   anomalies     = temp - x.reshape(-1,1) * trend.reshape(1, 12)
+   anomalies     = pd.DataFrame(anomalies, index = np.unique(da_series['time'].to_index().year),
+                               columns = range(1, 13))
+   anomalies_std = anomalies.std(axis = 1)
+
+   return annual_avg, seasonal_anom, trend, anomalies_std
+
+
 ###############################################################################
 # Frequency, Intensity, Mean of daily to monthly precipitation.
 ###############################################################################
