@@ -216,9 +216,10 @@ def _ts_decompose(self, da):
    weights       = np.cos(da['lat'] * np.pi / 180)
    da_series     = da.weighted(weights).mean(['lat', 'lon'])
 
+   clim          = float(da_series.mean())
    annual_avg    = da_series.resample({'time': '1Y'}).mean()
 
-   seasonal_anom = da_series.groupby('time.month').mean() - float(da_series.mean())
+   seasonal_anom = da_series.groupby('time.month').mean() - clim
    seasonal_anom = pd.Series(seasonal_anom.values, index = seasonal_anom['month'].values)
 
    temp          = da_series.values.reshape(-1, 12) - clim - seasonal_anom.values.reshape(1, 12)
