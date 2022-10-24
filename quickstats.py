@@ -1,3 +1,29 @@
+def round_to_magnitude(vector, nsig):
+    """ round to 'nsig' significant digits; works on vectors """
+    def _round_to_digits(a, magnitude):
+        return np.around(a / np.power(10, magnitude), nsig - 1) * np.power(10, magnitude)
+
+    order_of_magnitude = np.floor(np.log10(np.abs(vector)))
+    order_of_magnitude[np.abs(vector) < 1e-10] = 0
+    func = np.vectorize(_round_to_digits)
+    vector_round = func(vector, order_of_magnitude)
+    return vector_round
+
+
+def create_reasonable_bins(vec, nbins):
+    """ create percentile based bins, but merging the duplicates """
+    vec_bins = np.percentile(vec, np.linspace(0, 100, nbins))
+
+    # check how big difference there is; we need 2 more significant digits
+    vec_bins_abs = np.abs(vec_bins)
+    nsig = 2 + int(np.floor(np.log10( (np.max(vec_bins_abs) - np.min(vec_bins_abs))/np.max(vec_bins_abs) )))
+
+    vec_bins = np.unique(round_to_magnitude(vec_bins, nsig))
+    vec_bins[0] = vec_bins[0] - 1e-10
+    vec_bins[-1] = vec_bins[-1] + 1e-10
+    return vec_bins
+
+
 def fit_piecewise_linear(x, y, nbreaks):
     """
     Fit n-piecewise linear regression equations between x and y, return parameters. 
